@@ -32,14 +32,14 @@ module load fastqc/0.10.1
 ##########  Define variables and make directories
 ## Replace the numbers in the brackets with Your specific information
   ## make variable for your ASC ID so the directories are automatically made in YOUR directory
-MyID=hll0017          ## Example: MyID=aubtss
+MyID=aubclsd0322          ## Example: MyID=aubtss
 
   ## Make variable that represents YOUR working directory(WD) in scratch, your Raw data directory (DD) and the pre or postcleaned status (CS).
 DD=/scratch/$MyID/RNAseq/RawData   			## Example: DD=/scratch/${MyID}/PracticeRNAseq/RawData
 WD=/scratch/$MyID/RNAseq				## Example: WD=/scratch/${MyID}/PracticeRNAseq
 RDQ=RawDataQuality
 
-##  make the directories in SCRATCH for holding the raw data 
+##  make the directories in SCRATCH for holding the raw data
 ## -p tells it to make any upper level directories that are not there. Notice how this will also make the WD.
 mkdir -p ${DD}
 
@@ -56,12 +56,15 @@ cd ${DD}
 vdb-config --interactive
 
 # Copy SRR_IDs.txt to working directory
-cp ~/RNAseq_Samples/SRR_IDs.txt .
+cp /home/$MyID/RNAseq_Samples/SRR_IDs.txt .
+
+# Make a variable of SRR IDs
+SRR_IDs=$(cat SRR_IDs.txt)
 
 # Import data from NCBI
-for SRR in SRR_IDs.txt
+for SRR in ${SRR_IDs}
 do
-	fasterq-dump -F $SRR
+	fastq-dump -F $SRR
 done
 
 ##### Extra ####
