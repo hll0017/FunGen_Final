@@ -14,7 +14,7 @@ awk -F'\t' ' NR > 1 && $0 !~ /\*/ { print $1 }' Small_Breeds_List.txt >> SRR_IDs
 printf "SRR\tSize\tName\n" > Breed_Table.tsv
 
 # Append Big Dog Breeds to Breed_Table.tsv
-awk -F'\t' ' NR > 1 && $0 !~ /\*/ { print $1, FS, $2, FS, "Big" }' Big_Breeds_List.txt >> Breed_Table.tsv
+awk -F'\t' ' NR > 1 && $0 !~ /\*/ { print $1 FS $2 FS "Big" }' Big_Breeds_List.txt >> Breed_Table.tsv
 
 # Append Small Dog Breeds to Breed_Table.tsv
-awk -F'\t' ' NR > 1 && $0 !~ /\*/ { print $1, FS, $2, FS, "Small" }' Small_Breeds_List.txt >> Breed_Table.tsv
+awk -F'\t' ' NR > 1 && $0 !~ /\*/ { print $1 FS $2 FS "Small" }' Small_Breeds_List.txt >> Breed_Table.tsv
