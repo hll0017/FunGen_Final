@@ -32,16 +32,17 @@ module load fastqc/0.10.1
 ##########  Define variables and make directories
 ## Replace the numbers in the brackets with Your specific information
   ## make variable for your ASC ID so the directories are automatically made in YOUR directory
-MyID=[1]          ## Example: MyID=aubtss
+MyID=hll0017          ## Example: MyID=aubtss
 
   ## Make variable that represents YOUR working directory(WD) in scratch, your Raw data directory (DD) and the pre or postcleaned status (CS).
-DD=[2]   			## Example: DD=/scratch/${MyID}/PracticeRNAseq/RawData
-WD=[3]				## Example: WD=/scratch/${MyID}/PracticeRNAseq
+DD=/scratch/$MyID/RNAseq/RawData   			## Example: DD=/scratch/${MyID}/PracticeRNAseq/RawData
+WD=/scratch/$MyID/RNAseq				## Example: WD=/scratch/${MyID}/PracticeRNAseq
 RDQ=RawDataQuality
- 
+
 ##  make the directories in SCRATCH for holding the raw data 
 ## -p tells it to make any upper level directories that are not there. Notice how this will also make the WD.
 mkdir -p ${DD}
+
 ## move to the Data Directory
 cd ${DD}
 
@@ -52,22 +53,16 @@ cd ${DD}
 	## -I 	Append read id after spot id as 'accession.spot.readid' on defline.
 	## splits the files into R1 and R2 (forward reads, reverse reads)
 
-## These samples are from Bioproject PRJNA437447. An experiment on Daphnia pulex, 5 samples on ad lib feed, 5 samples on caloric restriction diet
-## https://www.ncbi.nlm.nih.gov/bioproject?LinkName=sra_bioproject&from_uid=5206312
-## For class only do the 6 that you are assigned, delete the other 4 from this list
-
 vdb-config --interactive
 
-fastq-dump -F --split-files SRR6819014
-fastq-dump -F --split-files SRR6819015
-fastq-dump -F --split-files SRR6819016
-fastq-dump -F --split-files SRR6819017
-fastq-dump -F --split-files SRR6819018
-fastq-dump -F --split-files SRR6819019
-fastq-dump -F --split-files SRR6819020
-fastq-dump -F --split-files SRR6819021
-fastq-dump -F --split-files SRR6819022
-fastq-dump -F --split-files SRR6819023
+# Copy SRR_IDs.txt to working directory
+cp ~/RNAseq_Samples/SRR_IDs.txt .
+
+# Import data from NCBI
+for SRR in SRR_IDs.txt
+do
+	fasterq-dump -F $SRR
+done
 
 ##### Extra ####
 ## If you are downloading data from a sequencing company instead of NCBI, using wget for example, then calculate the md5sum values of all the files in the folder (./*), and read into a text file.
