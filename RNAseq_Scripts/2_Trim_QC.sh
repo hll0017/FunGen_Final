@@ -20,7 +20,7 @@
                 ## queue: class  
                 ## core: 6
                 ## time limit (HH:MM:SS): 02:00:00  (may need to increase, if so run on medium queue)
-                ## Memory: 12gb
+                ## Memory: 64gb
                 ## 
 ###############################################
 
@@ -37,17 +37,17 @@ module load fastqc/0.10.1
 
 ## STOP. You need to replace the [number] with YOUR paths to 
 ##       make variables for your ASC ID so the directories are automatically made in YOUR directory
-MyID=[1]                        ## Example: MyID=aubtss
+MyID=aubclsd0322                        ## Example: MyID=aubtss
 
 # Variables: raw data directory (DD), working directory(WD), Quality after cleaning (PCQ), name of file containing the adpaters.
-WD=[2]                          ## Example: WD=/scratch/$MyID/PracticeRNAseq
-DD=[3]                          ## Example: DD=/scratch/$MyID/PracticeRNAseq/RawData
-CD=[4]                          ## Example: CD=/scratch/$MyID/PracticeRNAseq/CleanData
+WD=/scratch/$MyID/RNAseq                          ## Example: WD=/scratch/$MyID/PracticeRNAseq
+DD=/scratch/$MyID/RNAseq/RawData                          ## Example: DD=/scratch/$MyID/PracticeRNAseq/RawData
+CD=/scratch/$MyID/RNAseq/CleanData                          ## Example: CD=/scratch/$MyID/PracticeRNAseq/CleanData
 PCQ=PostCleanQuality
-adapters=AdaptersToTrim_All.fa  ## This is a fasta file that has a list of adapters commonly used in NGS sequencing. 
+# adapters=AdaptersToTrim_All.fa  ## This is a fasta file that has a list of adapters commonly used in NGS sequencing. 
 				## In the future, for your data, you will likely need to edit this for other projects based on how your libraries 
 				## were made to search for the correct adapters for your project
-				
+
 ## make the directories to hold the Cleaned Data files, and the directory to hold the results for assessing quality of the cleaned data.
 mkdir ${CD}
 mkdir ${WD}/${PCQ}
@@ -62,26 +62,27 @@ cd ${DD}
         ## grep means grab all the file names that end in ".fastq", 
         ## cut that name into elements every where you see "_" and keep the first element (-f 1)
         ## sort the list and keep only the unique names and put it into a file named "list"
-ls | grep ".fastq" |cut -d "_" -f 1 | sort | uniq > list
+#ls | grep ".fastq" |cut -d "_" -f 1 | sort | uniq > list
 
 ### Copy over the list of Sequencing Adapters that we want Trimmomatic to look for (along with its default adapters)
         ## CHECK: You may need to edit this path for the file that is in the class_shared directory from your account.
-cp /home/${MyID}/class_shared/AdaptersToTrim_All.fa . 
+# cp /home/${MyID}/class_shared/AdaptersToTrim_All.fa .
+
+### Create a variable for SRR IDs
+SRR_IDs=$(cat SRR_IDs.txt)
 
 ### Run a while loop to process through the names in the list and Trim them with the Trimmomatic Code
-while read i
+for SRR in ${SRR_IDs[@]}
 do
 
-        ### Run Trimmomatic in paired end (PE) mode with 6 threads using phred 33 quality score format. 
+        ### Run Trimmomatic in paired end (SE) mode with 6 threads using phred 33 quality score format. 
         ## STOP & DISCUSS: Check out the trimmomatic documentation to understand the parameters in line 77
 	#From Brittany
                  #/apps/x86-64/apps/spack_0.19.1/spack/opt/spack/linux-rocky8-zen3/gcc-11.3.0/trimmomatic-0.39-iu723m2xenra563gozbob6ansjnxmnfp/bin/trimmomatic-0.39.jar 
-        java -jar /apps/x86-64/apps/spack_0.19.1/spack/opt/spack/linux-rocky8-zen3/gcc-11.3.0/trimmomatic-0.39-iu723m2xenra563gozbob6ansjnxmnfp/bin/trimmomatic-0.39.jar   \
-	PE -threads 6 -phred33 \
-        "$i"_1.fastq "$i"_2.fastq  \
-        ${CD}/"$i"_1_paired.fastq ${CD}/"$i"_1_unpaired.fastq  ${CD}/"$i"_2_paired.fastq ${CD}/"$i"_2_unpaired.fastq \
-        ILLUMINACLIP:AdaptersToTrim_All.fa:2:35:10 HEADCROP:10 LEADING:30 TRAILING:30 SLIDINGWINDOW:6:30 MINLEN:36
-        
+        java -jar /apps/x86-64/apps/spack_0.19.1/spack/opt/spack/linux-rocky8-zen3/gcc-11.3.0/trimmomatic-0.39-iu723m2xenra563gozbob6ansjnxmnfp/bin/trimmomatic-0.39.jar  \
+	SE -threads 12 -phred33 "$SRR".fastq ${CD}/"$SRR".fastq  \
+        ILLUMINACLIP:TruSeq3-SE.fa:2:35:10 HEADCROP:3 LEADING:30 TRAILING:30 SLIDINGWINDOW:6:30 MINLEN:36
+
                 ## Trim read for quality when quality drops below Q30 and remove sequences shorter than 36 bp
                 ## PE for paired end phred-score-type  R1-Infile   R2-Infile  R1-Paired-outfile R1-unpaired-outfile R-Paired-outfile R2-unpaired-outfile  Trimming paramenter
                 ## MINLEN:<length> #length: Specifies the minimum length of reads to be kept.
@@ -92,10 +93,10 @@ do
 	## FastQC: run on each of the data files that have 'All' to check the quality of the data
 	## The output from this analysis is a folder of results and a zipped file of results
 
-fastqc ${CD}/"$i"_1_paired.fastq --outdir=${WD}/${PCQ}
-fastqc ${CD}/"$i"_2_paired.fastq --outdir=${WD}/${PCQ}
+	fastqc ${CD}/"$SRR".fastq --outdir=${WD}/${PCQ}
 
-done<list			# This is the end of the loop
+done
+# This is the end of the loop
 
 #########################  Now compress your results files from the Quality Assessment by FastQC 
 ## move to the directory with the cleaned data
