@@ -56,17 +56,12 @@ mkdir ${WD}/${PCQ}
 ## Move to Raw Data Directory
 cd ${DD}
 
-### Make list of file names to Trim
-        ## this line is a set of piped (|) commands
-        ## ls means make a list, 
-        ## grep means grab all the file names that end in ".fastq", 
-        ## cut that name into elements every where you see "_" and keep the first element (-f 1)
-        ## sort the list and keep only the unique names and put it into a file named "list"
-#ls | grep ".fastq" |cut -d "_" -f 1 | sort | uniq > list
+### Copy SRR_IDs.txt to obtain list of sequences to trim
+cp /home/${MyID}/FunGen_Final/SRR_IDs.txt .
 
 ### Copy over the list of Sequencing Adapters that we want Trimmomatic to look for (along with its default adapters)
         ## CHECK: You may need to edit this path for the file that is in the class_shared directory from your account.
-# cp /home/${MyID}/class_shared/AdaptersToTrim_All.fa .
+cp /home/${MyID}/FunGen_Final/TruSeq3-SE.fa .
 
 ### Create a variable for SRR IDs
 SRR_IDs=$(cat SRR_IDs.txt)
