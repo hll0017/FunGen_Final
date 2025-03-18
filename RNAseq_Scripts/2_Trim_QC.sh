@@ -57,7 +57,7 @@ mkdir ${WD}/${PCQ}
 cd ${DD}
 
 ### Copy SRR_IDs.txt to obtain list of sequences to trim
-cp /home/${MyID}/FunGen_Final/SRR_IDs.txt .
+cp /home/${MyID}/FunGen_Final/RNAseq_Samples/SRR_IDs.txt .
 
 ### Copy over the list of Sequencing Adapters that we want Trimmomatic to look for (along with its default adapters)
         ## CHECK: You may need to edit this path for the file that is in the class_shared directory from your account.
@@ -76,7 +76,7 @@ do
                  #/apps/x86-64/apps/spack_0.19.1/spack/opt/spack/linux-rocky8-zen3/gcc-11.3.0/trimmomatic-0.39-iu723m2xenra563gozbob6ansjnxmnfp/bin/trimmomatic-0.39.jar 
         java -jar /apps/x86-64/apps/spack_0.19.1/spack/opt/spack/linux-rocky8-zen3/gcc-11.3.0/trimmomatic-0.39-iu723m2xenra563gozbob6ansjnxmnfp/bin/trimmomatic-0.39.jar  \
 	SE -threads 12 -phred33 "$SRR".fastq ${CD}/"$SRR".fastq  \
-        ILLUMINACLIP:TruSeq3-SE.fa:2:35:10 HEADCROP:3 LEADING:30 TRAILING:30 SLIDINGWINDOW:6:30 MINLEN:36
+        ILLUMINACLIP:TruSeq3-SE.fa:2:35:10 HEADCROP:5 LEADING:30 TRAILING:30 SLIDINGWINDOW:6:30 MINLEN:36
 
                 ## Trim read for quality when quality drops below Q30 and remove sequences shorter than 36 bp
                 ## PE for paired end phred-score-type  R1-Infile   R2-Infile  R1-Paired-outfile R1-unpaired-outfile R-Paired-outfile R2-unpaired-outfile  Trimming paramenter
