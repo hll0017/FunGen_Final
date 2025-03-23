@@ -52,12 +52,12 @@ set -x
   ## Replace the [#] with paths to define these variable
 MyID=aubclsd0322          ## Example: MyID=aubtss
 
-WD=/scratch/$MyID/PracticeRNAseq            ## Example:/scratch/$MyID/PracticeRNAseq  
-CD=/scratch/$MyID/PracticeRNAseq/CleanData            ## Example:/scratch/$MyID/PracticeRNAseq/CleanData   #   *** This is where the cleaned paired files are located from the last script
-REFD=/scratch/$MyID/PracticeRNAseq/DaphniaRefGenome          ## Example:/scratch/$MyID/PracticeRNAseq/DaphniaRefGenome    # this directory contains the indexed reference genome for the garter snake
-MAPD=/scratch/$MyID/PracticeRNAseq/Map_HiSat2           ## Example:/scratch/$MyID/PracticeRNAseq/Map_HiSat2      #
-COUNTSD=/scratch/$MyID/PracticeRNAseq/Counts_StringTie       ## Example:/scratch/$MyID/PracticeRNAseq/Counts_StringTie
-RESULTSD=/home/$MyID/PracticeRNAseq/Counts_H_S_2024      ## Example:/home/aubtss/PracticeRNAseq/Counts_H_S
+WD=/scratch/$MyID/RNAseq            ## Example:/scratch/$MyID/PracticeRNAseq  
+CD=/scratch/$MyID/RNAseq/CleanData            ## Example:/scratch/$MyID/PracticeRNAseq/CleanData   #   *** This is where the cleaned paired files are located from the last script
+REFD=/scratch/$MyID/RNAseq/DaphniaRefGenome          ## Example:/scratch/$MyID/PracticeRNAseq/DaphniaRefGenome    # this directory contains the indexed reference genome for the garter snake
+MAPD=/scratch/$MyID/RNAseq/Map_HiSat2           ## Example:/scratch/$MyID/PracticeRNAseq/Map_HiSat2      #
+COUNTSD=/scratch/$MyID/RNAseq/Counts_StringTie       ## Example:/scratch/$MyID/PracticeRNAseq/Counts_StringTie
+RESULTSD=/home/$MyID/RNAseq/Counts_H_S_2025      ## Example:/home/aubtss/PracticeRNAseq/Counts_H_S
 
 REF=GCF_000002285.5_Dog10K_Boxer_Tasha_genomic                  ## This is what the "easy name" will be for the genome reference
 
@@ -71,13 +71,13 @@ mkdir -p $RESULTSD
 cd $REFD
 
 ### Copy the reference genome (.fasta) and the annotation file (.gff3) to this REFD directory
-cp /home/$MyID/class_shared/Dog_Tasha_GCF_000002285.5/data/GCF_000002285.5/$REF.fna .
-cp /home/$MyID/class_shared/Dog_Tasha_GCF_000002285.5/data/GCF_000002285.5/genomic.gff .
+cp /home/$MyID/FunGen_Final/ncbi_dataset/data/GCF_000002285.5/$REF.fna .
+cp /home/$MyID/FunGen_Final/ncbi_dataset/data/GCF_000002285.5/genomic.gtf .
 
 ###  Identify exons and splice sites on the reference genome
-gffread genomic.gff -T -o ${REF}.gtf               ## gffread converts the annotation file from .gff3 to .gft formate for HiSat2 to use.
-hisat2_extract_splice_sites.py ${REF}.gtf > ${REF}.ss
-hisat2_extract_exons.py ${REF}.gtf > ${REF}.exon
+# gffread genomic.gff -T -o ${REF}.gtf               ## gffread converts the annotation file from .gff3 to .gft formate for HiSat2 to use.
+hisat2_extract_splice_sites.py genomic.gtf > ${REF}.ss
+hisat2_extract_exons.py genomic.gtf > ${REF}.exon
 
 #### Create a HISAT2 index for the reference genome. NOTE every mapping program will need to build a its own index.
 hisat2-build --ss ${REF}.ss --exon ${REF}.exon ${REF}.fna Dog10K_Boxer_Tasha_index
@@ -100,16 +100,16 @@ do
   ##  -p indicates number of processors, --dta reports alignments for StringTie --rf is the read orientation
    hisat2 -p 12 --dta --phred33       \
     -x "${REFD}"/Dog10K_Boxer_Tasha_index       \
-    -1 "${CD}"/"$SRR".fastq \
+    -U "${CD}"/"$SRR".fastq \
     -S "$SRR".sam
 
     ### view: convert the SAM file into a BAM file  -bS: BAM is the binary format corresponding to the SAM text format.
     ### sort: convert the BAM file to a sorted BAM file.
     ### Example Input: SRR629651.sam; Output: SRR629651_sorted.bam
-  samtools view -@ 6 -bS "$SRR".sam > "$SRR".bam
+  samtools view -@ 12 -bS "$SRR".sam > "$SRR".bam
 
     ###  This is sorting the bam, using 6 threads, and producing a .bam file that includes the word 'sorted' in the name
-  samtools sort -@ 6  "$SRR".bam  -o  "$SRR"_sorted.bam
+  samtools sort -@ 12  "$SRR".bam  -o  "$SRR"_sorted.bam
 
     ### Index the BAM and get mapping statistics, and put them in a text file for us to look at.
   samtools flagstat "$SRR"_sorted.bam   > "$SRR"_Stats.txt
@@ -132,7 +132,7 @@ cp *.txt ${RESULTSD}
  ## Move to the counts directory
 cd ${COUNTSD}
  ## run the python script prepDE.phy to prepare you data for downstream analysis.
-cp /home/${MyID}/class_shared/prepDE.py3 .
+cp /home/${MyID}/FunGen_Final/prepDE.py3 .
 
 prepDE.py3 -i ${COUNTSD}
 
