@@ -132,7 +132,7 @@ cp *.txt ${RESULTSD}
  ## Move to the counts directory
 cd ${COUNTSD}
  ## run the python script prepDE.phy to prepare you data for downstream analysis.
-cp /home/${MyID}/FunGen_Final/prepDE.py3 .
+cp /home/${MyID}/FunGen_Final/RNAseq_Scripts/prepDE.py3 .
 
 prepDE.py3 -i ${COUNTSD}
 
