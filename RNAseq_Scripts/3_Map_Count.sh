@@ -54,7 +54,7 @@ MyID=aubclsd0322          ## Example: MyID=aubtss
 
 WD=/scratch/$MyID/RNAseq            ## Example:/scratch/$MyID/PracticeRNAseq  
 CD=/scratch/$MyID/RNAseq/CleanData            ## Example:/scratch/$MyID/PracticeRNAseq/CleanData   #   *** This is where the cleaned paired files are located from the last script
-REFD=/scratch/$MyID/RNAseq/DaphniaRefGenome          ## Example:/scratch/$MyID/PracticeRNAseq/DaphniaRefGenome    # this directory contains the indexed reference genome for the garter snake
+REFD=/scratch/$MyID/RNAseq/DogReferenceGenome          ## Example:/scratch/$MyID/PracticeRNAseq/DaphniaRefGenome    # this directory contains the indexed reference genome for the garter snake
 MAPD=/scratch/$MyID/RNAseq/Map_HiSat2           ## Example:/scratch/$MyID/PracticeRNAseq/Map_HiSat2      #
 COUNTSD=/scratch/$MyID/RNAseq/Counts_StringTie       ## Example:/scratch/$MyID/PracticeRNAseq/Counts_StringTie
 RESULTSD=/home/$MyID/RNAseq/Counts_H_S_2025      ## Example:/home/aubtss/PracticeRNAseq/Counts_H_S
