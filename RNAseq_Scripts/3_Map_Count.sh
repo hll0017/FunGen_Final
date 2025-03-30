@@ -21,10 +21,10 @@
 ##  After you have this script in your home directory and you have made it executable using  "chmod +x [script name]", 
 ##  then run the script by using "run_script [script name]"
 ##  suggested paramenters are below to submit this script.
-##    queue: class or medium
-##    core: 6
-##    time limit (HH:MM:SS): 04:00:00 
-##    Memory: 12gb
+##    queue: bigmem
+##    core: 12
+##    time limit (HH:MM:SS): 32:00:00 
+##    Memory: 480gb
 ##    
 ###############################################
 
@@ -72,15 +72,15 @@ cd $REFD
 
 ### Copy the reference genome (.fasta) and the annotation file (.gff3) to this REFD directory
 cp /home/$MyID/FunGen_Final/ncbi_dataset/data/GCF_000002285.5/$REF.fna .
-cp /home/$MyID/FunGen_Final/ncbi_dataset/data/GCF_000002285.5/genomic.gtf .
+cp /home/$MyID/FunGen_Final/ncbi_dataset/data/GCF_000002285.5/genomic.gff ./$REF.gff
 
 ###  Identify exons and splice sites on the reference genome
-# gffread genomic.gff -T -o ${REF}.gtf               ## gffread converts the annotation file from .gff3 to .gft formate for HiSat2 to use.
-hisat2_extract_splice_sites.py genomic.gtf > ${REF}.ss
-hisat2_extract_exons.py genomic.gtf > ${REF}.exon
+gffread $REF.gff -T -o ${REF}.gtf               ## gffread converts the annotation file from .gff3 to .gft formate for HiSat2 to use.
+hisat2_extract_splice_sites.py $REF.gtf > ${REF}.ss
+hisat2_extract_exons.py $REF.gtf > ${REF}.exon
 
 #### Create a HISAT2 index for the reference genome. NOTE every mapping program will need to build a its own index.
-hisat2-build --ss ${REF}.ss --exon ${REF}.exon ${REF}.fna Dog10K_Boxer_Tasha_index
+hisat2-build --ss ${REF}.ss --exon ${REF}.exon ${REF}.fna ${REF}_index
 
 ########################  Map and Count the Data using HiSAT2 and StringTie  ########################
 
@@ -98,21 +98,18 @@ for SRR in ${SRR_IDs[@]}
 do
   ## HiSat2 is the mapping program
   ##  -p indicates number of processors, --dta reports alignments for StringTie --rf is the read orientation
-   hisat2 -p 12 --dta --phred33       \
-    -x "${REFD}"/Dog10K_Boxer_Tasha_index       \
-    -U "${CD}"/"$SRR".fastq \
-    -S "$SRR".sam
+   hisat2 -p 12 --dta --phred33 -x ${REFD}/${REF}_index -U ${CD}/${SRR}.fastq -S ${SRR}.sam
 
     ### view: convert the SAM file into a BAM file  -bS: BAM is the binary format corresponding to the SAM text format.
     ### sort: convert the BAM file to a sorted BAM file.
     ### Example Input: SRR629651.sam; Output: SRR629651_sorted.bam
-  samtools view -@ 12 -bS "$SRR".sam > "$SRR".bam
+  samtools view -@ 12 -bS ${SRR}.sam > ${SRR}.bam
 
     ###  This is sorting the bam, using 6 threads, and producing a .bam file that includes the word 'sorted' in the name
-  samtools sort -@ 12  "$SRR".bam  -o  "$SRR"_sorted.bam
+  samtools sort -@ 12  ${SRR}.bam -o ${SRR}_sorted.bam
 
     ### Index the BAM and get mapping statistics, and put them in a text file for us to look at.
-  samtools flagstat "$SRR"_sorted.bam   > "$SRR"_Stats.txt
+  samtools flagstat ${SRR}_sorted.bam   > ${SRR}_Stats.txt
 
   ### Stringtie is the program that counts the reads that are mapped to each gene, exon, transcript model. 
   ### The output from StringTie are counts folders in a directory that is ready to bring into the R program Ballgown to 
@@ -120,7 +117,7 @@ do
   ### eAB options: This will run stringtie once and  ONLY use the Ref annotation for counting readsto genes and exons 
 
 	mkdir "${COUNTSD}"/"$SRR"
-	stringtie -p 12 -e -B -G  "${REFD}"/"${REF}".gtf -o "${COUNTSD}"/"$SRR"/"$SRR".gtf -l "$SRR"   "${MAPD}"/"$SRR"_sorted.bam
+	stringtie -p 12 -e -B -G  "${REFD}"/"${REF}".gtf -o "${COUNTSD}"/"$SRR"/"$SRR".gtf -l "$SRR"  "${MAPD}"/"$SRR"_sorted.bam
 
 done
 
