@@ -136,7 +136,6 @@ jpeg("heatmapCM.jpg", width = 10, height = 10, units = "in", res = 300)
 pheatmap(mat, annotation_col = anno)
 dev.off()
 
-
 # Heatmap of the sample-to-sample distances
 sampleDists <- dist(t(assay(rld)))
 library("RColorBrewer")
@@ -156,7 +155,6 @@ pheatmap(sampleDistMatrix,
          clustering_distance_cols=sampleDists,
          col=colors)
 dev.off()
-
 
 
 #  Principal component plot of the samples
