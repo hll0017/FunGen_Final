@@ -136,12 +136,18 @@ jpeg("heatmapCM.jpg", width = 10, height = 10, units = "in", res = 300)
 pheatmap(mat, annotation_col = anno)
 dev.off()
 
-# Heatmap of the sample-to-sample distances
+
+#Reorder the factor levels so Small_breed comes before Big_breed
+rld$size <- factor(rld$size, levels = c("Small_breed", "Big_breed"))
+print(rld$size)
+str(rld$size)
 sampleDists <- dist(t(assay(rld)))
+
+# Heatmap of the sample-to-sample distances
 library("RColorBrewer")
 sampleDistMatrix <- as.matrix(sampleDists)
 rownames(sampleDistMatrix) <- paste(rld$size)
-colnames(sampleDistMatrix) <- NULL
+colnames(sampleDistMatrix) <- paste(rld$size)
 colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
 pheatmap(sampleDistMatrix,
          clustering_distance_rows=sampleDists,
@@ -155,6 +161,117 @@ pheatmap(sampleDistMatrix,
          clustering_distance_cols=sampleDists,
          col=colors)
 dev.off()
+
+
+############## reorder for sample to sample distance Check the breed sizes and their structure
+print(rld$size)
+str(rld$size)
+
+# Step 1: Reorder the factor levels so Small_breed comes before Big_breed
+rld$size <- factor(rld$size, levels = c("Small_breed", "Big_breed"))
+
+# Step 2: Get the correct order based on the newly ordered levels
+breed_order <- order(rld$size)  # Now this should give the correct order: Small_breed first, then Big_breed
+print(breed_order)
+
+# Step 3: Reorder the sample distance matrix rows and columns according to breed_order
+sampleDists <- dist(t(assay(rld)))  # Calculate the distances again if needed
+sampleDistMatrix <- as.matrix(sampleDists)
+
+
+# Reorder rows and columns based on breed_order
+sampleDistMatrix <- sampleDistMatrix[breed_order, breed_order]
+
+# Step 4: Set the row and column names to match the breed size order
+rownames(sampleDistMatrix) <- rld$size[breed_order]
+colnames(sampleDistMatrix) <- rld$size[breed_order]
+
+# Step 5: Create the heatmap with the reordered distance matrix
+library("RColorBrewer")
+colors <- colorRampPalette(rev(brewer.pal(9, "Blues")))(255)
+
+pheatmap(sampleDistMatrix,
+         clustering_distance_rows = sampleDists,  # Distance for rows
+         clustering_distance_cols = sampleDists,  # Distance for columns
+         col = colors)
+
+
+
+# Reorder factor levels (if needed for other analyses)
+rld$size <- factor(rld$size, levels = c("Small_breed", "Big_breed"))
+str(rld$size)
+
+# Calculate sample distances
+sampleDists <- dist(t(assay(rld)))
+sampleDistMatrix <- as.matrix(sampleDists)
+
+# Create annotation data frame for the breeds
+sample_names <- rownames(sampleDistMatrix)
+sample_annotation <- data.frame(
+  Breed = rld$size,
+  row.names = sample_names
+)
+
+# Create color palette for breeds
+ann_colors <- list(
+  Breed = c(Small_breed = "#E69F00", Big_breed = "#56B4E9")
+)
+
+# Create the heatmap with clustering enabled and annotations
+library("RColorBrewer")
+colors <- colorRampPalette(rev(brewer.pal(9, "Blues")))(255)
+
+pheatmap(sampleDistMatrix,
+         clustering_distance_rows = sampleDists,  # Enable clustering
+         clustering_distance_cols = sampleDists,  # Enable clustering
+         col = colors,
+         annotation_row = sample_annotation,
+         annotation_col = sample_annotation,
+         annotation_colors = ann_colors)
+
+
+
+
+# Create a data frame for column annotations
+anno <- data.frame(Breed = rld$size)
+rownames(anno) <- colnames(rld)
+
+# Create the sample-to-sample distance matrix
+sampleDists <- dist(t(assay(rld)))
+sampleDistMatrix <- as.matrix(sampleDists)
+
+# Add proper names
+rownames(sampleDistMatrix) <- colnames(rld)
+colnames(sampleDistMatrix) <- colnames(rld)
+
+# Plot with clustering but color bar to show breed
+pheatmap(sampleDistMatrix,
+         clustering_distance_rows = sampleDists,
+         clustering_distance_cols = sampleDists,
+         annotation_col = anno,
+         annotation_row = anno,
+         col = colorRampPalette(rev(brewer.pal(9, "Blues")))(255))
+
+
+
+
+########################### Reorder the annotation data based on breed size- CM
+anno <- anno[order(anno$size), ]  # Reorder annotations so Big_breed is on one side and Small_breed on the other
+
+# Reorder the matrix columns to match the annotation
+mat <- mat[, rownames(anno)]  # Reorder mat columns to match the order of samples in anno
+
+# Create the heatmap without specifying custom colors (it will auto-assign colors)
+jpeg("heatmapCM_Modified.jpg", width = 10, height = 10, units = "in", res = 300)
+pheatmap(mat, 
+         annotation_col = anno,    # Add breed size annotation for columns
+         cluster_rows = TRUE,      # Cluster rows based on gene expression
+         cluster_cols = FALSE,     # Do not cluster columns (samples), since we already reordered them
+         show_rownames = TRUE,     # Show row names (genes)
+         show_colnames = TRUE)     # Show column names (samples)
+
+dev.off()
+
 
 
 #  Principal component plot of the samples
@@ -250,3 +367,65 @@ NormTransExp_Anno_withName$gene_name <- gsub("gene-(.*)\\|.*", "\\1", NormTransE
 
 ## Write the transformed normalized count matrix with Gene Names to a tab delimited text file that can be imported into Cytoscape
 write.table(as.data.frame(NormTransExp_Anno_withName), file="NormTransExp_Anno_Names.txt", quote=FALSE, row.names=FALSE, sep = "\t")  
+
+
+
+######################## Gene Ontology Analysis #######################################################
+library(AnnotationDbi)
+library(GO.db)
+library(clusterProfiler)
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("org.Cf.eg.db")
+
+genes_to_test <- rownames(resOrdered[resOrdered$log2FoldChange > 0.5,])
+head(genes_to_test)
+# Clean the names to get only gene symbols
+clean_gene_names <- gsub(".*-(.*)\\|.*", "\\1", genes_to_test)
+head(clean_gene_names)
+
+#1. Biological process
+GO_BP_results <- enrichGO(gene = clean_gene_names, OrgDb = "org.Cf.eg.db", keyType = "SYMBOL",
+                       ont = "BP",  pAdjustMethod = "BH", pvalueCutoff = 0.05, qvalueCutoff = 0.2)
+as.data.frame(GO_BP_results)
+
+library(enrichplot)
+library(ggplot2)
+
+dotplot(GO_BP_results , showCategory = 20) + ggtitle("Top 20 GO Biological Processes")
+
+#2. molecular process
+GO_MF_results <- enrichGO(gene = clean_gene_names, OrgDb = "org.Cf.eg.db", keyType = "SYMBOL",
+                          ont = "MF",  pAdjustMethod = "BH", pvalueCutoff = 0.05, qvalueCutoff = 0.2)
+as.data.frame(GO_MF_results)
+
+dotplot(GO_MF_results , showCategory = 20) + ggtitle("Top 20 GO Molecular function")
+
+#3.Cellular 
+GO_CC_results <- enrichGO(gene = clean_gene_names, OrgDb = "org.Cf.eg.db", keyType = "SYMBOL",
+                          ont = "CC",  pAdjustMethod = "BH", pvalueCutoff = 0.05, qvalueCutoff = 0.2)
+as.data.frame(GO_CC_results)
+
+dotplot(GO_CC_results , showCategory = 20) + ggtitle("Top 20 GO Cellular function")
+
+
+####### Filter GO terms containing "insulin" in the description
+insulin_related_go <- GO_results@result[grep("insulin", GO_results@result$Description, ignore.case = TRUE), ]
+
+# View the filtered insulin-related GO terms
+print(insulin_related_go)
+
+
+# Extract insulin-related term IDs
+insulin_ids <- grep("insulin", GO_results@result$Description, ignore.case = TRUE)
+insulin_terms <- GO_results@result$ID[insulin_ids]
+
+# Subset the enrichResult object while preserving its class
+insulin_enrich <- GO_results[GO_results@result$ID %in% insulin_terms]
+
+# Now plot
+dotplot(insulin_enrich, showCategory = 10) + ggtitle("Top Insulin-Related GO Terms")
+
+
+
