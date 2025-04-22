@@ -1,0 +1,23 @@
+producer_class	xtools.gsea.GseaPreranked
+producer_timestamp	1744769312897
+param	rpt_label	C2
+param	rnd_seed	timestamp
+param	set_min	5
+param	zip_report	false
+param	create_svgs	false
+param	scoring_scheme	weighted
+param	rnk	C:\Users\henry\OneDrive\Desktop\Auburn Spring 2025\BIOL 6850\Final Project\DGE\DGErankName.rnk
+param	norm	meandiv
+param	out	C:\Users\henry\OneDrive\Desktop\Auburn Spring 2025\BIOL 6850\Final Project\GSEA
+param	mode	Abs_max_of_probes
+param	include_only_symbols	true
+param	help	false
+param	set_max	500
+param	gmx	ftp.broadinstitute.org://pub/gsea/msigdb/human/gene_sets/c2.all.v2024.1.Hs.symbols.gmt
+param	make_sets	true
+param	plot_top_x	20
+param	gui	false
+param	nperm	1000
+param	collapse	No_Collapse
+
+file	C:\Users\henry\OneDrive\Desktop\Auburn Spring 2025\BIOL 6850\Final Project\GSEA\C2.GseaPreranked.1744769312897\index.html
