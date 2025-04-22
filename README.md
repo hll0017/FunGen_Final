@@ -10,16 +10,20 @@ Raw single-end RNAseq data from testicular tissue were retrieved from the NCBI S
 
 ## Download, Trimming, and Mapping Data
 ### Download
-Datasets were downloaded from NCBI Sequence Read Archive and raw read quality was assessed using the RNAseq_scripts/1_Download_QC.sh script on the Alabama Supercomputer (ASC). See script for recommended job parameters.
+Reads were downloaded from NCBI Sequence Read Archive and raw read quality was assessed using the RNAseq_scripts/1_Download_QC.sh script on the Alabama Supercomputer (ASC). See script for recommended job parameters.
 
 ### Trimming
-Raw datasets were trimmed and cleaned using the RNAseq_scripts/2_Trim_QC.sh script on the ASC. See script for recommended job parameters.
+Raw read were trimmed and cleaned using the RNAseq_scripts/2_Trim_QC.sh script on the ASC. See script for recommended job parameters.
 
-###
+### Mapping
+Trimmed reads were then mapped to the annotated dog reference genome Dog10K_Boxer_Tasha_1.0 GCF_000002285.5 and reads were counted using the RNAseq_scripts/3_Map_Count.sh on the ASC. See script for recommended job parameters. **This is an extremely memory intensive script, so parameters may need to be adjusted for script to run properly**
 
 ## Differential Gene Expression Analysis
 
-## GSEA
-### Insulin and Insulin-like Signaling (IIS)
+## Analysis of Insulin and Insulin-like Signaling (IIS) Pathway
 
-### Cancer
+## Analysis of Cancer-Associated Gene Sets
+### GSEA
+
+### Cytoscape
+
