@@ -1,0 +1,57 @@
+##fileformat=VCFv4.2
+##FILTER=<ID=PASS,Description="All filters passed">
+##bcftoolsVersion=1.13+htslib-1.13
+##bcftoolsCommand=mpileup -f /scratch/aubclsd0322/RNAseq/REF_SNP/IIS_CDS.fasta SRR13389807_sorted_mapOnly.bam
+##reference=file:///scratch/aubclsd0322/RNAseq/REF_SNP/IIS_CDS.fasta
+##contig=<ID=IGF1,length=462>
+##contig=<ID=IGF2,length=564>
+##contig=<ID=INS,length=333>
+##contig=<ID=INSR,length=4035>
+##contig=<ID=IGF1R,length=4035>
+##contig=<ID=IGF2R,length=7494>
+##contig=<ID=IGFBP1,length=750>
+##contig=<ID=IGFBP2,length=1005>
+##contig=<ID=IGFBP3,length=876>
+##contig=<ID=IGFBP4,length=777>
+##contig=<ID=IGFBP5,length=816>
+##contig=<ID=IGFBP6,length=717>
+##contig=<ID=IRS1,length=3723>
+##contig=<ID=IRS2,length=4122>
+##contig=<ID=IRS4,length=3825>
+##ALT=<ID=*,Description="Represents allele(s) other than observed.">
+##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
+##INFO=<ID=IDV,Number=1,Type=Integer,Description="Maximum number of raw reads supporting an indel">
+##INFO=<ID=IMF,Number=1,Type=Float,Description="Maximum fraction of raw reads supporting an indel">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Raw read depth">
+##INFO=<ID=VDB,Number=1,Type=Float,Description="Variant Distance Bias for filtering splice-site artefacts in RNA-seq data (bigger is better)",Version="3">
+##INFO=<ID=RPBZ,Number=1,Type=Float,Description="Mann-Whitney U-z test of Read Position Bias (closer to 0 is better)">
+##INFO=<ID=MQBZ,Number=1,Type=Float,Description="Mann-Whitney U-z test of Mapping Quality Bias (closer to 0 is better)">
+##INFO=<ID=BQBZ,Number=1,Type=Float,Description="Mann-Whitney U-z test of Base Quality Bias (closer to 0 is better)">
+##INFO=<ID=MQSBZ,Number=1,Type=Float,Description="Mann-Whitney U-z test of Mapping Quality vs Strand Bias (closer to 0 is better)">
+##INFO=<ID=SCBZ,Number=1,Type=Float,Description="Mann-Whitney U-z test of Soft-Clip Length Bias (closer to 0 is better)">
+##INFO=<ID=FS,Number=1,Type=Float,Description="Phred-scaled p-value using Fisher's exact test to detect strand bias">
+##INFO=<ID=SGB,Number=1,Type=Float,Description="Segregation based metric.">
+##INFO=<ID=MQ0F,Number=1,Type=Float,Description="Fraction of MQ0 reads (smaller is better)">
+##FORMAT=<ID=PL,Number=G,Type=Integer,Description="List of Phred-scaled genotype likelihoods">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##INFO=<ID=AC,Number=A,Type=Integer,Description="Allele count in genotypes for each ALT allele, in the same order as listed">
+##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
+##INFO=<ID=DP4,Number=4,Type=Integer,Description="Number of high-quality ref-forward , ref-reverse, alt-forward and alt-reverse bases">
+##INFO=<ID=MQ,Number=1,Type=Integer,Description="Average mapping quality">
+##bcftools_callVersion=1.13+htslib-1.13
+##bcftools_callCommand=call -mv -Ov -o /scratch/aubclsd0322/RNAseq/Variants/SRR13389807_variants.vcf; Date=Tue Apr 22 18:48:40 2025
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SRR13389807_sorted_mapOnly.bam
+IGF1	374	.	G	C	4.44002	.	DP=10;VDB=0.02;SGB=-0.453602;RPBZ=-1.59099;BQBZ=0.5;SCBZ=-0.5;FS=0;MQ0F=0;AC=1;AN=2;DP4=3,5,0,2;MQ=60	GT:PL	0/1:37,0,190
+IGF1	381	.	T	C	179.416	.	DP=8;VDB=0.650919;SGB=-0.651104;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,2,6;MQ=60	GT:PL	1/1:209,24,0
+INSR	2574	.	T	G	60.4147	.	DP=3;VDB=0.074936;SGB=-0.511536;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,3;MQ=60	GT:PL	1/1:90,9,0
+INSR	2728	.	TTAG	T	56.523	.	INDEL;IDV=2;IMF=0.181818;DP=11;VDB=0.234846;SGB=-0.453602;RPBZ=-1.42725;SCBZ=-1.10554;FS=0;MQ0F=0;AC=1;AN=2;DP4=0,5,0,2;MQ=60	GT:PL	0/1:90,0,196
+INSR	3210	.	T	C	80.4149	.	DP=4;VDB=0.832512;SGB=-0.556411;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,4;MQ=60	GT:PL	1/1:110,12,0
+INSR	3948	.	C	T	89.275	.	DP=19;VDB=0.566336;SGB=-0.651104;RPBZ=0.0827175;BQBZ=-1.70639;FS=0;MQ0F=0;AC=1;AN=2;DP4=0,11,0,8;MQ=60	GT:PL	0/1:122,0,148
+IGF1R	542	.	G	A	43.7831	.	DP=5;VDB=0.292464;SGB=-0.511536;RPBZ=0.57735;BQBZ=1.22474;FS=0;MQ0F=0;AC=1;AN=2;DP4=0,2,0,3;MQ=60	GT:PL	0/1:77,0,33
+IGF2R	3517	.	C	T	9.65265	.	DP=8;VDB=0.02;SGB=-0.453602;RPBZ=0;FS=0;MQ0F=0;AC=1;AN=2;DP4=0,6,0,2;MQ=60	GT:PL	0/1:43,0,121
+IGFBP6	672	.	G	A	66.2821	.	DP=12;VDB=0.476318;SGB=-0.590765;RPBZ=0.583917;FS=0;MQ0F=0;AC=1;AN=2;DP4=0,7,0,5;MQ=60	GT:PL	0/1:99,0,126
+IRS1	1099	.	C	T	7.30814	.	DP=1;SGB=-0.379885;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,1;MQ=60	GT:PL	1/1:36,3,0
+IRS1	2692	.	A	G	7.30814	.	DP=1;SGB=-0.379885;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,1;MQ=60	GT:PL	1/1:36,3,0
+IRS1	3645	.	T	C	36.4154	.	DP=2;VDB=0.36;SGB=-0.453602;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60	GT:PL	1/1:66,6,0
+IRS2	382	.	C	T	7.30814	.	DP=1;SGB=-0.379885;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,1;MQ=60	GT:PL	1/1:36,3,0
+IRS2	3741	.	T	C	19.2782	.	DP=5;VDB=0.36;SGB=-0.453602;RPBZ=0;FS=0;MQ0F=0;AC=1;AN=2;DP4=0,3,0,2;MQ=60	GT:PL	0/1:52,0,77
