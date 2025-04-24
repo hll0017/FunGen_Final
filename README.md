@@ -19,6 +19,8 @@ Raw single-end RNAseq data from testicular tissue were retrieved from the NCBI S
 | SRR13389840 | Weimaraner | Large |
 | SRR13389824 | German Shepherd | Large |
 
+SRR
+
 ## Download, Trimming, and Mapping Data
 ### Download
 Reads were downloaded from NCBI Sequence Read Archive and raw read quality was assessed using the RNAseq_scripts/1_Download_QC.sh script on the Alabama Supercomputer (ASC). See script for recommended job parameters.
@@ -38,8 +40,16 @@ Read counts (gene_count_matrix.csv) were imported into RStudio. The script DEG_S
 
 ### Cytoscape
 
+
+### Sequence Variation 
+Trimmed reads were mapped to a subset of IIS genes () using the script ... on the ASC. See script for recommended job parameters
+
+### Geneious
+The resulting consensus sequences obtained from sequence variation were imported into the program Geneious. Consensus sequences were grouped based on gene and consensus sequence alignments were built for each gene. Each alignment was analyzed manually to identify shared sequence variations. For an SNP or amino acid change to be considered it must be shared by at least 3 samples and not contain ambiguous or missing nucleotides or amino acids.
+
 ## Analysis of Cancer-Associated Gene Sets
 ### GSEA
+GSEA was performed using ranked differentially expressed gene list (DEGrankName.rnk), a treatment class file (treatment_final.cls), and the C2: Curated Gene Set Collection (c2.all.v2024.1.Hs.symbols.gmt) with the No_Collapse option selected and 1000 permutations. Gene sets smaller than 5 genes were excluded from GSEA. The resulting folder was C2.GseaPreranked.1744769312897.
 
 ### Cytoscape
-
+The results from GSEA were imported into Cytoscape. A gene set network of C2 GSEA gene sets at an FDR < 0.1 was first created (C2.cys). From this file two additional networks were created. In the first, all nodes that had three or less neighbors within three connections were removed to identify connected gene sets (C2_Connections.cys). In the second network, nodes were filtered out leaving only gene sets whose name contained the regular expression "CANCER" (C2_CANCER.cys). For each network, all nodes were selected and all differentially expressed genes with a rank score > 12 were marked for further analysis.
