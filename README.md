@@ -1,5 +1,5 @@
 # FunGen_Final
-Final Project for Functional Genomics (BIOL 5850/6850) - RNAseq differential expression experiment in testes across dog breeds (large vs. small breeds)
+Final Project for Functional Genomics (BIOL 5850/6850) - RNAseq differential expression and sequence variation in testes across dog breeds (large vs. small breeds)
 
 ## Data
 Raw single-end RNAseq data from testicular tissue were retrieved from the NCBI Sequence Read Archive (SRA) under BioProject PRJNA69086. A total of 12 datasets from 12 different dog breeds were selected. These datasets were divided into two size groups based on breed size according to the [American Kennel Club](https://www.akc.org/dog-breeds/)'s definition of Large/XLarge and Small/XSmall dog breeds. Samples used are listed in the table below with associated SRR number, breed name and size group.
@@ -36,13 +36,13 @@ Read counts (gene_count_matrix.csv) were imported into RStudio. The script DEG_S
 
 ## Analysis of Insulin and Insulin-like Signaling (IIS) Pathway
 ### GSEA
-
+GSEA was performed using ranked differentially expressed gene list (DEGrankName.rnk), a treatment class file (treatment_final.cls), and the CP:KEGG_LEGACY Gene Set Collection (c2.cp.kegg_legacy.v2024.1.Hs.symbols.gmt) with the No_Collapse option selected and 1000 permutations. The rest of the default options were left unchanged. The resulting folder was my_GSEA_KEGG_whole_analysis.GseaPreranked.1744228114343.
 
 ### Cytoscape
 
 
 ### Sequence Variation 
-Trimmed reads were mapped to a subset of IIS genes () using the script ... on the ASC. See script for recommended job parameters
+Trimmed reads were mapped to a subset of IIS genes (IIS_CDS.fasta) using the script Map_VariantCall_DogIIS.sh on the ASC. See script for recommended job parameters
 
 ### Geneious
 The resulting consensus sequences obtained from sequence variation were imported into the program Geneious. Consensus sequences were grouped based on gene and consensus sequence alignments were built for each gene. Each alignment was analyzed manually to identify shared sequence variations. For an SNP or amino acid change to be considered it must be shared by at least 3 samples and not contain ambiguous or missing nucleotides or amino acids.
