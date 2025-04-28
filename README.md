@@ -34,8 +34,9 @@ Trimmed reads were then mapped to the annotated dog reference genome Dog10K_Boxe
 ## Differential Gene Expression Analysis
 Read counts (gene_count_matrix.csv) were imported into RStudio (v4.4.1). The script DEG_Script.R was used to calculate differential expression and create a ranked gene list (DGErankName.rnk) which was used for subsequent GSEA and Cytoscape analyses. 
 
-## Gene Set Enrichment Analysis (GSEA)  
-### KEGG Pathway
+## Analysis Insulin and Insulin-like Signaling (IIS)
+### Gene Set Enrichment Analysis (GSEA)  
+#### KEGG Pathways
 GSEA was performed using ranked differentially expressed preranked gene list (DEGrankName.rnk) and the CP:KEGG_LEGACY Gene Set Collection (c2.cp.kegg_legacy.v2024.1.Hs.symbols.gmt) with the No_Collapse option selected and 1000 permutations. The rest of the default options were left unchanged. The resulting folder is GSEA_Resluts/my_GSEA_KEGG_whole_analysis.GseaPreranked.1744228114343.
 
 ### Insulin and Insulin-like Signaling (IIS) Pathway
