@@ -19,7 +19,6 @@ Raw single-end RNAseq data from testicular tissue were retrieved from the NCBI S
 | SRR13389840 | Weimaraner | Large |
 | SRR13389824 | German Shepherd | Large |
 
-SRR
 
 ## Download, Trimming, and Mapping Data
 ### Download
