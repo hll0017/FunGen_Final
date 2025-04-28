@@ -32,11 +32,17 @@ Raw read were trimmed and cleaned using the RNAseq_scripts/2_Trim_QC.sh script o
 Trimmed reads were then mapped to the annotated dog reference genome Dog10K_Boxer_Tasha_1.0 GCF_000002285.5 and reads were counted using the RNAseq_scripts/3_Map_Count.sh on the ASC. See script for recommended job parameters. **This is an extremely memory intensive script, so parameters may need to be adjusted for script to run properly**
 
 ## Differential Gene Expression Analysis
-Read counts (gene_count_matrix.csv) were imported into RStudio. The script DEG_Script.R was used to calculate differential expression and create a ranked gene list (DGErankName.rnk) which was used for subsequent GSEA and Cytoscape analyses. 
+Read counts (gene_count_matrix.csv) were imported into RStudio (v4.4.1). The script DEG_Script.R was used to calculate differential expression and create a ranked gene list (DGErankName.rnk) which was used for subsequent GSEA and Cytoscape analyses. 
 
-## Analysis of Insulin and Insulin-like Signaling (IIS) Pathway
-### GSEA
-GSEA was performed using ranked differentially expressed gene list (DEGrankName.rnk), a treatment class file (treatment_final.cls), and the CP:KEGG_LEGACY Gene Set Collection (c2.cp.kegg_legacy.v2024.1.Hs.symbols.gmt) with the No_Collapse option selected and 1000 permutations. The rest of the default options were left unchanged. The resulting folder was my_GSEA_KEGG_whole_analysis.GseaPreranked.1744228114343.
+## Gene Set Enrichment Analysis (GSEA)  
+### KEGG Pathway
+GSEA was performed using ranked differentially expressed preranked gene list (DEGrankName.rnk) and the CP:KEGG_LEGACY Gene Set Collection (c2.cp.kegg_legacy.v2024.1.Hs.symbols.gmt) with the No_Collapse option selected and 1000 permutations. The rest of the default options were left unchanged. The resulting folder is GSEA_Resluts/my_GSEA_KEGG_whole_analysis.GseaPreranked.1744228114343.
+
+### Insulin and Insulin-like Signaling (IIS) Pathway
+GSEA was specifically performed using using ranked differentially expressed preranked gene list (DEGrankName.rnk) and a manually curated IIS pathway gene sets, with the No_Collapse option selected and 1000 permutations. The rest of the default options were left unchanged. The resulting folder is GSEA_Resluts/my_GSEA_Insul_GeneEntry_analysis.GseaPreranked.1744336406675
+
+### Gene Ontology Enrichment 
+GO enrichment analysis was performed using the ranked gene list (DEGrankName.rnk) with the gseaGO function from the clusterProfiler R package on R Studio (v4.4.1). The analysis was conducted with a p-value cutoff of < 0.25 and default settings, using the Canis familiaris annotation database (org.Cf.eg.db). Enrichment analysis was performed separately for the Biological Process (BP) and Molecular Function (MF) GO categories.
 
 ### Cytoscape
 
