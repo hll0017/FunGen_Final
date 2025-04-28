@@ -45,7 +45,7 @@ GSEA was specifically performed using using ranked differentially expressed prer
 GO enrichment analysis was performed using the ranked gene list (DEGrankName.rnk) with the gseaGO function from the clusterProfiler R package on R Studio (v4.4.1). The analysis was conducted with a p-value cutoff of < 0.25 and default settings, using the Canis familiaris annotation database (org.Cf.eg.db). Enrichment analysis was performed separately for the Biological Process (BP) and Molecular Function (MF) GO categories.
 
 ### Cytoscape
-
+The results from GSEA of KEGG Pathways were imported into Cytoscape. Gene sets that met the threshold FDR < 0.1 were used to create a network representing gene set enrichment and similarity between gene sets.
 
 ### Sequence Variation 
 Trimmed reads were mapped to a subset of IIS genes (IIS_CDS.fasta) using the script Map_VariantCall_DogIIS.sh on the ASC. See script for recommended job parameters
