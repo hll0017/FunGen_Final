@@ -99,6 +99,7 @@ dev.off()
 #After calling plotMA, one can use the function identify to interactively detect the row number of individual genes by clicking on the plot. 
 # One can then recover the gene identifiers by saving the resulting indices:
 plotMA(res, main="DESeq2", ylim=c(-8,8))
+
 idx <- identify(res$baseMean, res$log2FoldChange)
 # after selecting a gene. You need to press escape to move on
 rownames(res)[idx]
@@ -541,7 +542,8 @@ all_core_genes <- unique(unlist(strsplit(gsea_BP@result$core_enrichment, "/")))
 print(all_core_genes)
 length(all_core_genes)
 
-
+IIS_gsea_BP <- gsea_BP@result[grep("insulin", gsea_BP@result$Description, ignore.case = TRUE), ]
+IIS_gsea_BP
 # You can add this information in a supplementary table
 
 # Known IIS top regulators
@@ -714,10 +716,29 @@ dev.off()
 
 
 
+# Get top 15 results as tables
+top15_BP <- gsea_BP@result %>% 
+  arrange(p.adjust) %>% 
+  head(15)
 
-arrangeGrob(plot1, top = textGrob("A", x = unit(0, "npc"),
-                                  y = unit(1, "npc"), just = c("left", "top"),
-                                  gp = gpar(fontsize = 16, fontface = "bold")))
+top15_MF <- gsea_MF@result %>% 
+  arrange(p.adjust) %>% 
+  head(15)
+
+top15_CC <- gsea_CC@result %>% 
+  arrange(p.adjust) %>% 
+  head(15)
+write.csv(top15_BP, "Gene_Ontology/Top15_BP.csv", row.names = FALSE)
+write.csv(top15_MF, "Gene_Ontology/Top15_MF.csv", row.names = FALSE)
+write.csv(top15_CC, "Gene_Ontology/Top15_CC.csv", row.names = FALSE)
+
+
+
+
+
+
+
+
 
 ############# Optional- USing enrichGO for Overrepresented genes ########
 
