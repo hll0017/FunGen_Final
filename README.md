@@ -19,7 +19,6 @@ Raw single-end RNAseq data from testicular tissue were retrieved from the NCBI S
 | SRR13389840 | Weimaraner | Large |
 | SRR13389824 | German Shepherd | Large |
 
-SRR
 
 ## Download, Trimming, and Mapping Data
 ### Download
@@ -34,8 +33,9 @@ Trimmed reads were then mapped to the annotated dog reference genome Dog10K_Boxe
 ## Differential Gene Expression Analysis
 Read counts (gene_count_matrix.csv) were imported into RStudio (v4.4.1). The script DEG_Script.R was used to calculate differential expression and create a ranked gene list (DGErankName.rnk) which was used for subsequent GSEA and Cytoscape analyses. 
 
-## Gene Set Enrichment Analysis (GSEA)  
-### KEGG Pathway
+## Analysis Insulin and Insulin-like Signaling (IIS)
+### Gene Set Enrichment Analysis (GSEA)  
+#### KEGG Pathways
 GSEA was performed using ranked differentially expressed preranked gene list (DEGrankName.rnk) and the CP:KEGG_LEGACY Gene Set Collection (c2.cp.kegg_legacy.v2024.1.Hs.symbols.gmt) with the No_Collapse option selected and 1000 permutations. The rest of the default options were left unchanged. The resulting folder is GSEA_Resluts/my_GSEA_KEGG_whole_analysis.GseaPreranked.1744228114343.
 
 ### Insulin and Insulin-like Signaling (IIS) Pathway
@@ -45,7 +45,7 @@ GSEA was specifically performed using using ranked differentially expressed prer
 GO enrichment analysis was performed using the ranked gene list (DEGrankName.rnk) with the gseaGO function from the clusterProfiler R package on R Studio (v4.4.1). The analysis was conducted with a p-value cutoff of < 0.25 and default settings, using the Canis familiaris annotation database (org.Cf.eg.db). Enrichment analysis was performed separately for the Biological Process (BP) and Molecular Function (MF) GO categories.
 
 ### Cytoscape
-
+The results from GSEA of KEGG Pathways were imported into Cytoscape. Gene sets that met the threshold FDR < 0.1 were used to create a network representing gene set enrichment and similarity between gene sets.
 
 ### Sequence Variation 
 Trimmed reads were mapped to a subset of IIS genes (IIS_CDS.fasta) using the script Map_VariantCall_DogIIS.sh on the ASC. See script for recommended job parameters
